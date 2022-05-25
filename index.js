@@ -40,6 +40,18 @@ async function run() {
         const paymentCollection = client.db("screwBeat").collection("payment");
         const usersCollection = client.db("screwBeat").collection("users");
 
+        
+    const verifyAdmin = async (req, res, next) => {
+        const requester = req.decoded.email;
+        const requesterAccount = await userCollection.findOne({ email: requester });
+        if (requesterAccount.role === 'admin') {
+          next();
+        }
+        else {
+          res.status(403).send({ message: 'forbidden' });
+        }
+      }
+
         app.get('/tools', async (req, res) => {
             const query = {};
             const cursor = toolsCollection.find(query);
@@ -67,7 +79,12 @@ async function run() {
             res.send(orders);
         });
 
-        app.get('/orders', async (req, res) => {
+        app.get('/users', verifyJWT, async (req, res) => {
+            const users = await usersCollection.find().toArray();
+            res.send(users);
+          });
+
+        app.get('/myOrders', verifyJWT, async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
             const cursor = ordersCollection.find(query);
@@ -89,6 +106,23 @@ async function run() {
             res.send(myProfile);
         });;
 
+        app.get('/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const user = await usersCollection.findOne({ email: email });
+            const isAdmin = user.role === 'admin';
+            res.send({ admin: isAdmin })
+          })
+      
+          app.put('/users/admin/:email', verifyJWT, verifyAdmin, async (req, res) => {
+            const email = req.params.email;
+            const filter = { email: email };
+            const updateDoc = {
+              $set: { role: 'admin' },
+            };
+            const result = await usersCollection.updateOne(filter, updateDoc);
+            res.send(result);
+          })
+        
         app.patch('/orders/:id', async (req, res) => {
             const id = req.params.id;
             const payment = req.body;
@@ -109,15 +143,14 @@ async function run() {
             const email = req.params.email;
             const user = req.body;
             const filter = { email: email };
-            console.log(filter);
             const options = { upsert: true };
             const updateDoc = {
-                $set: user,
+              $set: user,
             };
             const result = await usersCollection.updateOne(filter, updateDoc, options);
-            res.send( result);
-
-        });
+            const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
+            res.send({ result, token });
+          });
 
         app.post('/create-payment-intent', async (req, res) => {
             const tools = req.body;
