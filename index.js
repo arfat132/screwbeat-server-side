@@ -152,11 +152,11 @@ async function run() {
             res.send({ result, token });
         });
         
-        app.put('/myProfile/:id', async (req, res) => {
-            const id = req.params.id;
+        app.put('/myProfile/:email', async (req, res) => {
+            const email = req.params.email;
             const myProfile= req.body;
-            console.log(myProfile)
-            const filter = { _id: ObjectId(id) };
+            const filter = { email: email };
+            console.log(myProfile);
             const options = { upsert: true };
             const updatedDoc = {
                 $set: {
@@ -220,12 +220,6 @@ async function run() {
             res.send(result);
         });
 
-        app.delete('/users/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await usersCollection.deleteOne(query);
-            res.send(result);
-        });
 
     } finally {
 
