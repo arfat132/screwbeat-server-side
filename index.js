@@ -154,15 +154,12 @@ async function run() {
         
         app.put('/myProfile/:email', async (req, res) => {
             const email = req.params.email;
-            const myProfile= req.body;
+            const updateProfile= req.body;
             const filter = { email: email };
-            console.log(myProfile);
+            console.log(updateProfile);
             const options = { upsert: true };
             const updatedDoc = {
-                $set: {
-                    stock: myProfile
-
-                }
+                $set: updateProfile
             };
             const result = await myProfileCollection.updateOne(filter, updatedDoc, options);
             res.send({ result });
