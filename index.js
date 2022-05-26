@@ -113,15 +113,15 @@ async function run() {
             res.send({ admin: isAdmin })
           })
       
-          app.put('/users/admin/:email',verifyJWT, verifyAdmin, async (req, res) => {
+        app.put('/users/admin/:email', verifyJWT, verifyAdmin, async (req, res) => {
             const email = req.params.email;
             const filter = { email: email };
             const updateDoc = {
-              $set: { role: 'admin' },
+                $set: { role: 'admin' },
             };
             const result = await usersCollection.updateOne(filter, updateDoc);
             res.send(result);
-          })
+        });
         
         app.patch('/orders/:id', async (req, res) => {
             const id = req.params.id;
@@ -150,7 +150,24 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updateDoc, options);
             const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
             res.send({ result, token });
-          });
+        });
+        
+        app.put('/myProfile/:id', async (req, res) => {
+            const id = req.params.id;
+            const myProfile= req.body;
+            console.log(myProfile)
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    stock: myProfile
+
+                }
+            };
+            const result = await myProfileCollection.updateOne(filter, updatedDoc, options);
+            res.send({ result });
+
+        });
 
         app.post('/create-payment-intent', async (req, res) => {
             const tools = req.body;
@@ -200,6 +217,13 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await toolsCollection.deleteOne(query);
+            res.send(result);
+        });
+
+        app.delete('/users/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await usersCollection.deleteOne(query);
             res.send(result);
         });
 
