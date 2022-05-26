@@ -1,6 +1,6 @@
 # Screwbeat
 
-Live website [Screwbeat](https://github.com/facebook/create-react-app).
+Live website [Screwbeat](https://screwbeat-auth.web.app/).
 
 ## Features
 
