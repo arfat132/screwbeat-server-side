@@ -33,7 +33,7 @@ function verifyJWT(req, res, next) {
 async function run() {
     try {
         await client.connect();
-        const toolsCollection = client.db("screwBeat").collection("tools");
+        const lightsCollection = client.db("screwBeat").collection("lights");
         const reviewsCollection = client.db("screwBeat").collection("reviews");
         const ordersCollection = client.db("screwBeat").collection("orders");
         const myProfileCollection = client.db("screwBeat").collection("myProfile");
@@ -52,17 +52,17 @@ async function run() {
         }
       }
 
-        app.get('/tools', async (req, res) => {
+        app.get('/lights', async (req, res) => {
             const query = {};
-            const cursor = toolsCollection.find(query);
-            const tools = await cursor.toArray();
-            res.send(tools);
+            const cursor = lightsCollection.find(query);
+            const lights = await cursor.toArray();
+            res.send(lights);
         });
 
-        app.get('/tools/:id', async (req, res) => {
+        app.get('/lights/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const tool = await toolsCollection.findOne(query);
+            const tool = await lightsCollection.findOne(query);
             res.send(tool);
         })
 
@@ -167,8 +167,8 @@ async function run() {
         });
 
         app.post('/create-payment-intent', async (req, res) => {
-            const tools = req.body;
-            const price = tools.price;
+            const lights = req.body;
+            const price = lights.price;
             const amount = price * 100;
             const paymentIntent = await stripe.paymentIntents.create({
                 amount: amount,
@@ -190,9 +190,9 @@ async function run() {
             res.send(result);
         });
 
-        app.post('/tools', async (req, res) => {
+        app.post('/lights', async (req, res) => {
             const newProducts = req.body;
-            const result = await toolsCollection.insertOne(newProducts);
+            const result = await lightsCollection.insertOne(newProducts);
             res.send(result);
 
         });
@@ -210,10 +210,10 @@ async function run() {
             res.send(result);
         });
 
-        app.delete('/tools/:id', async (req, res) => {
+        app.delete('/lights/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const result = await toolsCollection.deleteOne(query);
+            const result = await lightsCollection.deleteOne(query);
             res.send(result);
         });
 
@@ -226,7 +226,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Screwbeat is running')
+    res.send('OutLight is running')
 })
 
 app.listen(port, () => {
