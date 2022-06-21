@@ -39,6 +39,7 @@ async function run() {
         const myProfileCollection = client.db("screwBeat").collection("myProfile");
         const paymentCollection = client.db("screwBeat").collection("payment");
         const usersCollection = client.db("screwBeat").collection("users");
+        const shopCollection = client.db("screwBeat").collection("shop");
 
         
     const verifyAdmin = async (req, res, next) => {
@@ -64,6 +65,21 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const tool = await lightsCollection.findOne(query);
             res.send(tool);
+        })
+
+        app.get('/shop', async (req, res) => {
+            const limit = Number(req.query.limit)
+            const pageNumber = Number(req.query.pageNumber)
+            const cursor = shopCollection.find();
+            const shop = await cursor.skip(limit * pageNumber).limit(limit).toArray();
+            res.send(shop);
+        });
+
+        app.get('/shop/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const shop = await shopCollection.findOne(query);
+            res.send(shop);
         })
 
         app.get('/reviews', async (req, res) => {
