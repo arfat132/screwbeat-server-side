@@ -1,25 +1,18 @@
-# Screwbeat
+# OutLight
 
-Live website [Screwbeat](https://screwbeat-auth.web.app/).
+Live website [OutLight](https://outlight-7c319.web.app/).
 
 ## Features
 
-* This is a tools menufacture tools website.
-* In this website has 4 four route.
-* In this website have sign up and sign out method.
-* In this website has purchase tools, delete orders, card payment gateway.
-* In this website has a dashboard
-* Admin Role system
+* Implemented a user-friendly responsive landing page and react routing.
+* Implemented signup, signout authentication, and payment gateway method.
+* Implemented Stripe payment gateway method.
+* Implemented MongoDB CRUD operation.
+* Implemented User Dashboard.
+* Implemented Admin Dashboard.
 
-### Technologies
-* React.js
-* React Router
-* Node.js
-* Express.js
-* MongoDB
-* Tailwind css
-* TailBlocks
-* DaisyUI
-* React icons
-* Firebase
-* React Firebase hooks 
+## Technologu used - React.js, React Router, Node.js, Express.js, MongoDB, Tailwind css, TailBlocks, DaisyUI, React icons, Firebase, React Firebase hooks.
+
+## Admin Crediential
+Email: admin@example.com
+Password: 12345678
