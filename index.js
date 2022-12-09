@@ -120,7 +120,7 @@ async function run() {
             const cursor = myProfileCollection.find(query);
             const myProfile = await cursor.toArray();
             res.send(myProfile);
-        });;
+        });
 
         app.get('/admin/:email', async (req, res) => {
             const email = req.params.email;
